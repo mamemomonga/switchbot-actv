@@ -46,39 +46,39 @@ func (t *SwitchBot) SearchDevice() {
 				t.configs.DeviceAC.Mode = 1
 			}
 			if t.configs.DeviceAC.Temp == 0 {
-				t.configs.DeviceAC.Temp = 25
+				t.configs.DeviceAC.Temp = 20
 			}
 		}
 	}
 }
 
-func (t *SwitchBot) ACOn() {
+func (t *SwitchBot) ACOn(on bool) {
+	pwr := goswitchbot.PowerOn
+	if !on {
+		pwr = goswitchbot.PowerOff
+	}
+
 	ctx := context.Background()
-	t.device.Command(
+	err := t.device.Command(
 		ctx,
 		t.configs.DeviceAC.ID,
 		goswitchbot.ACSetAll(
 			t.configs.DeviceAC.Temp,
 			goswitchbot.ACMode(t.configs.DeviceAC.Mode),
 			goswitchbot.ACFanSpeed(t.configs.DeviceAC.Speed),
-			goswitchbot.PowerOn,
+			pwr,
 		),
 	)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	//	log.Printf("設定温度: %d度", t.configs.DeviceAC.Temp)
+	//	log.Printf("モード:   %d", t.configs.DeviceAC.Mode)
+	//	log.Printf("風速:     %d", t.configs.DeviceAC.Speed)
+
 }
 
-func (t *SwitchBot) ACOff() {
-	ctx := context.Background()
-	t.device.Command(
-		ctx,
-		t.configs.DeviceAC.ID,
-		goswitchbot.ACSetAll(
-			t.configs.DeviceAC.Temp,
-			goswitchbot.ACMode(t.configs.DeviceAC.Mode),
-			goswitchbot.ACFanSpeed(t.configs.DeviceAC.Speed),
-			goswitchbot.PowerOff,
-		),
-	)
-}
 func (t *SwitchBot) TVPower() {
 	ctx := context.Background()
 	t.device.Command(

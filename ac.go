@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"strconv"
 
 	"github.com/gdamore/tcell/v2"
@@ -34,11 +33,9 @@ func viewAC() {
 		}
 		switch list.GetCurrentItem() {
 		case 0:
-			log.Println("エアコン 電源入")
-			sb.ACOn()
+			sb.ACOn(true)
 		case 1:
-			log.Println("エアコン 電源切")
-			sb.ACOff()
+			sb.ACOn(false)
 		case 2:
 			viewACTemp()
 		case 3:
@@ -69,25 +66,25 @@ func viewSpeed() {
 		switch list.GetCurrentItem() {
 		case 0:
 			configs.DeviceAC.Speed = 1
-			sb.ACOn()
+			sb.ACOn(true)
 			configSave()
 			return
 
 		case 1:
 			configs.DeviceAC.Speed = 2
-			sb.ACOn()
+			sb.ACOn(true)
 			configSave()
 			return
 
 		case 2:
 			configs.DeviceAC.Speed = 3
-			sb.ACOn()
+			sb.ACOn(true)
 			configSave()
 			return
 
 		case 3:
 			configs.DeviceAC.Speed = 4
-			sb.ACOn()
+			sb.ACOn(true)
 			configSave()
 			return
 
@@ -116,31 +113,31 @@ func viewMode() {
 		switch list.GetCurrentItem() {
 		case 0:
 			configs.DeviceAC.Mode = 1
-			sb.ACOn()
+			sb.ACOn(true)
 			configSave()
 			return
 
 		case 1:
 			configs.DeviceAC.Mode = 2
-			sb.ACOn()
+			sb.ACOn(true)
 			configSave()
 			return
 
 		case 2:
 			configs.DeviceAC.Mode = 3
-			sb.ACOn()
+			sb.ACOn(true)
 			configSave()
 			return
 
 		case 3:
 			configs.DeviceAC.Mode = 4
-			sb.ACOn()
+			sb.ACOn(true)
 			configSave()
 			return
 
 		case 4:
 			configs.DeviceAC.Mode = 4
-			sb.ACOn()
+			sb.ACOn(true)
 			configSave()
 			return
 
@@ -167,6 +164,6 @@ func viewACTemp() {
 		return
 	}
 	configs.DeviceAC.Temp, _ = strconv.Atoi(buf)
-	sb.ACOn()
+	sb.ACOn(true)
 	configSave()
 }
