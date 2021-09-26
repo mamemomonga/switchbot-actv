@@ -136,7 +136,7 @@ func viewMode() {
 			return
 
 		case 4:
-			configs.DeviceAC.Mode = 4
+			configs.DeviceAC.Mode = 5
 			sb.ACOn(true)
 			configSave()
 			return
