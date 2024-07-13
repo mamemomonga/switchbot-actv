@@ -31,6 +31,7 @@ type CfgDeviceAC struct {
 	Speed int
 	Mode  int
 	Temp  int
+	Dir   int
 }
 
 func New(filename string) (t *Cfg, err error) {

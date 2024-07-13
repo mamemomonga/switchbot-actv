@@ -84,9 +84,30 @@ func (t *SwitchBot) ACOn(on bool) {
 	//	log.Printf("風速:     %d", t.configs.DeviceAC.Speed)
 
 }
+func (t *SwitchBot) ACDir(d int) {
+	ctx := context.Background()
+	var dir string
+	switch d {
+	case 1:
+		dir = "風向1"
+	case 2:
+		dir = "風向2"
+	case 3:
+		dir = "風向3"
+	}
+	log.Printf("ACカスタムコマンド: %s\n", dir)
+	t.device.Command(
+		ctx,
+		t.configs.DeviceAC.ID,
+		goswitchbot.DeviceCommandRequest{
+			CommandType: "customize",
+			Command:     dir,
+			Parameter:   "default",
+		},
+	)
+}
 
 func (t *SwitchBot) TVPower() {
-	t.connect()
 	ctx := context.Background()
 	t.device.Command(
 		ctx,
@@ -98,6 +119,7 @@ func (t *SwitchBot) TVPower() {
 		},
 	)
 }
+
 func (t *SwitchBot) TVChannelUp(up bool) {
 	cmd := "channelSub"
 	if up {

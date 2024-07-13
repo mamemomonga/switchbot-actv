@@ -20,6 +20,7 @@ func viewAC() {
 
 		fanSpeed := jdFanSpeed[configs.DeviceAC.Speed]
 		mode := jdMode[configs.DeviceAC.Mode]
+		dir := configs.DeviceAC.Dir
 
 		list := tview.NewList().
 			AddItem("電源入", "電源を入れます", '1', stop).
@@ -27,6 +28,7 @@ func viewAC() {
 			AddItem("温度", fmt.Sprintf("温度を変更します (%d度)", configs.DeviceAC.Temp), '3', stop).
 			AddItem("風速", fmt.Sprintf("風速を切り替えます (%s)", fanSpeed), '4', stop).
 			AddItem("モード", fmt.Sprintf("冷暖房を切り替えます (%s)", mode), '5', stop).
+			AddItem("風向き", fmt.Sprintf("風向きを設定します(風向%d)", dir), '6', stop).
 			AddItem("戻る", "機器選択に戻ります", '0', stop)
 		if err := app.SetRoot(list, true).SetFocus(list).Run(); err != nil {
 			panic(err)
@@ -43,6 +45,8 @@ func viewAC() {
 		case 4:
 			viewMode()
 		case 5:
+			viewDir()
+		default:
 			return
 		}
 	}
@@ -138,6 +142,45 @@ func viewMode() {
 		case 4:
 			configs.DeviceAC.Mode = 5
 			sb.ACOn(true)
+			configSave()
+			return
+
+		default:
+			return
+		}
+	}
+}
+
+func viewDir() {
+	for {
+		app := tview.NewApplication()
+		stop := func() {
+			app.Stop()
+		}
+		list := tview.NewList().
+			AddItem("風向1", "", '1', stop).
+			AddItem("風向2", "", '2', stop).
+			AddItem("風向3", "", '3', stop).
+			AddItem("戻る", "エアコンに戻ります", '0', stop)
+		if err := app.SetRoot(list, true).SetFocus(list).Run(); err != nil {
+			panic(err)
+		}
+		switch list.GetCurrentItem() {
+		case 0:
+			configs.DeviceAC.Dir = 1
+			sb.ACDir(1)
+			configSave()
+			return
+
+		case 1:
+			configs.DeviceAC.Dir = 2
+			sb.ACDir(2)
+			configSave()
+			return
+
+		case 2:
+			configs.DeviceAC.Dir = 3
+			sb.ACDir(3)
 			configSave()
 			return
 
