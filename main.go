@@ -20,8 +20,10 @@ func main() {
 	if err != nil {
 		log.Fatalf("ERROR: %v", err)
 	}
-
-	if configs.APIToken == "" {
+	if configs.APIToken.Token == "" {
+		viewInputToken()
+	}
+	if configs.APIToken.Secret == "" {
 		viewInputToken()
 	}
 	sb = NewSwitchBot(configs)
@@ -29,16 +31,15 @@ func main() {
 	if err := configs.Save(); err != nil {
 		log.Fatalf("ERROR: %v", err)
 	}
-
 	for {
 		viewDeviceSelect()
 	}
 }
 
-func viewInputToken() {
+func inputText(s string) string {
 	app := tview.NewApplication()
 	inputField := tview.NewInputField().
-		SetLabel("SwitchBot APIトークンを入力: ").
+		SetLabel(s + ": ").
 		SetFieldWidth(100).
 		SetDoneFunc(func(key tcell.Key) {
 			app.Stop()
@@ -50,7 +51,12 @@ func viewInputToken() {
 	if buf == "" {
 		os.Exit(0)
 	}
-	configs.APIToken = buf
+	return buf
+}
+
+func viewInputToken() {
+	configs.APIToken.Token = inputText("SwitchBot トークンを入力")
+	configs.APIToken.Secret = inputText("SwitchBot クライアントシークレットを入力")
 	configSave()
 }
 

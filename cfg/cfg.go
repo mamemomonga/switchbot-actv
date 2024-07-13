@@ -2,16 +2,20 @@ package cfg
 
 import (
 	"encoding/json"
-	"io/ioutil"
 	"log"
 	"os"
 )
 
 type Cfg struct {
 	filename string
-	APIToken string
+	APIToken CfgAPIToken
 	DeviceTV CfgDeviceTV
 	DeviceAC CfgDeviceAC
+}
+
+type CfgAPIToken struct {
+	Token  string
+	Secret string
 }
 
 type CfgDeviceTV struct {
@@ -53,7 +57,7 @@ func (t *Cfg) Save() (err error) {
 	if err != nil {
 		return
 	}
-	err = ioutil.WriteFile(t.filename, buf, 0644)
+	err = os.WriteFile(t.filename, buf, 0644)
 	if err != nil {
 		return
 	}
@@ -62,7 +66,7 @@ func (t *Cfg) Save() (err error) {
 }
 
 func (t *Cfg) Load() (err error) {
-	buf, err := ioutil.ReadFile(t.filename)
+	buf, err := os.ReadFile(t.filename)
 	if err != nil {
 		return
 	}

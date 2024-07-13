@@ -18,10 +18,16 @@ type SwitchBot struct {
 
 func NewSwitchBot(c *cfg.Cfg) *SwitchBot {
 	t := new(SwitchBot)
-	t.client = goswitchbot.New(c.APIToken)
-	t.device = t.client.Device()
 	t.configs = c
+	t.client = goswitchbot.New(t.configs.APIToken.Token, t.configs.APIToken.Secret)
+	t.device = t.client.Device()
 	return t
+}
+
+func (t *SwitchBot) connect() *goswitchbot.DeviceService {
+	c := goswitchbot.New(t.configs.APIToken.Token, t.configs.APIToken.Secret)
+	d := c.Device()
+	return d
 }
 
 func (t *SwitchBot) SearchDevice() {
@@ -62,7 +68,7 @@ func (t *SwitchBot) ACOn(on bool) {
 	err := t.device.Command(
 		ctx,
 		t.configs.DeviceAC.ID,
-		goswitchbot.ACSetAll(
+		goswitchbot.ACSetAllCommand(
 			t.configs.DeviceAC.Temp,
 			goswitchbot.ACMode(t.configs.DeviceAC.Mode),
 			goswitchbot.ACFanSpeed(t.configs.DeviceAC.Speed),
@@ -80,6 +86,7 @@ func (t *SwitchBot) ACOn(on bool) {
 }
 
 func (t *SwitchBot) TVPower() {
+	t.connect()
 	ctx := context.Background()
 	t.device.Command(
 		ctx,
